@@ -77,8 +77,20 @@ class Renderer {
         // TODO: draw at least 2 convex polygons (each with a different number of vertices >= 5)
         //   - variable `this.show_points` should be used to determine whether or not to render vertices
         let list = [{x: 300, y: 100}, {x: 400, y: 150}, {x: 400, y: 200}, {x: 320, y: 290}, {x: 280, y: 300}, {x: 260, y: 280},{x: 240, y: 220}]
-        this.drawConvexPolygon(list, [50, 168, 155, 255], framebuffer) 
-        
+        for(let i = 0; i<list.length; i++) {
+            if (this.show_points) {
+                this.drawVertex({x: list[i].x, y:list[i].y},[0,0,0,255], framebuffer);
+            }
+        }
+        this.drawConvexPolygon(list, [50, 168, 155, 255], framebuffer);
+
+        let list2 = [{x: 550, y: 280}, {x: 550, y: 400}, {x: 620, y: 380}, {x: 620, y: 300}];
+        this.drawConvexPolygon(list2, [50, 168, 155, 255], framebuffer)
+        for(let i = 0; i<list2.length; i++) {
+            if (this.show_points) {
+                this.drawVertex({x: list2[i].x, y:list2[i].y},[0,0,0,255], framebuffer);
+            }
+        }
         // Following lines are example of drawing a single triangle
         // (this should be removed after you implement the polygon)
         // let point_a = {x:  80, y:  40};
@@ -94,11 +106,25 @@ class Renderer {
         //   - variable `this.show_points` should be used to determine whether or not to render vertices
         let c = [227, 3, 252, 255];
         this.drawLine({x: 100, y: 400}, {x: 280, y: 400}, c, framebuffer);
+        if (this.show_points) {
+            this.drawVertex({x: 100, y:400},[0,0,0,255], framebuffer);
+            this.drawVertex({x: 280, y:400},[0,0,0,255], framebuffer);
+        }
         this.drawLine({x: 190, y: 400}, {x: 190, y: 250}, c, framebuffer);
+        if (this.show_points) {
+            this.drawVertex({x: 190, y:400},[0,0,0,255], framebuffer);
+            this.drawVertex({x: 190, y:250},[0,0,0,255], framebuffer);
+        }
         this.drawBezierCurve({x: 190, y: 250}, {x: 180, y: 150}, {x: 130, y: 150}, {x: 100, y: 250}, this.num_curve_sections, c, framebuffer);
         this.drawCircle({x: 335, y: 235}, 60, this.num_curve_sections, c, framebuffer);
         this.drawBezierCurve({x: 460, y: 180}, {x: 490, y: 300}, {x: 550, y: 300}, {x: 580, y: 180}, this.num_curve_sections, c, framebuffer);
-        this.drawConvexPolygon([{x: 650, y: 180}, {x: 650, y: 300}, {x: 720, y: 280}, {x: 720, y: 200}], c, framebuffer);
+        let list = [{x: 650, y: 180}, {x: 650, y: 300}, {x: 720, y: 280}, {x: 720, y: 200}];
+        this.drawConvexPolygon(list, [255, 0, 0, 255], framebuffer);
+        for(let i = 0; i<list.length; i++) {
+            if (this.show_points) {
+                this.drawVertex({x: list[i].x, y:list[i].y},[0,0,0,255], framebuffer);
+            }
+        }
 
     }
 
@@ -124,6 +150,9 @@ class Renderer {
             y1 = Math.pow((1-t),3) * p0.y + 3 * Math.pow((1-t),2) * t * p1.y + 3 * (1-t) * Math.pow(t,2) * p2.y + Math.pow(t,3) *p3.y;
             fp.x = Math.round(fp.x);
             fp.y = Math.round(fp.y);
+            if (this.show_points) {
+                this.drawVertex({x: fp.x, y:fp.y},[0,0,0,255], framebuffer);
+            }
             this.drawLine(fp, {x: Math.round(x1), y: Math.round(y1)}, color, framebuffer);
             fp = {x: x1, y: y1};
 
@@ -150,6 +179,9 @@ class Renderer {
             let angleI = angle * i;
             let x = center.x + radius * Math.cos(angleI);
             let y = center.y + radius * Math.sin(angleI);
+            if (this.show_points) {
+                this.drawVertex({x: fp.x, y:fp.y},[0,0,0,255], framebuffer);
+            }
             this.drawLine(fp, {x: Math.round(x), y: Math.round(y)}, color, framebuffer);
             fp = {x: Math.round(x), y: Math.round(y)};
         }
@@ -207,9 +239,9 @@ class Renderer {
     }
 
     drawLine(p0, p1, color, framebuffer) {
-        if (this.show_points) {
-            this.drawVertex({x: p0.x, y:p0.y},[0,0,0,255], framebuffer);
-        }
+        // if (this.show_points) {
+        //     this.drawVertex({x: p0.x, y:p0.y},[0,0,0,255], framebuffer);
+        // }
         if (Math.abs(p1.y - p0.y) <= Math.abs(p1.x - p0.x)) { // |m| <= 1
             if (p0.x < p1.x) {
                 this.drawLineLow(p0.x, p0.y, p1.x, p1.y, color, framebuffer);
